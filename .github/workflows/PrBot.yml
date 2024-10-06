@@ -16,18 +16,16 @@ jobs:
       - name: Snyk Bot scan
         continue-on-error: true
         run: |
-         rm -rf node_modules
-         rm -f package-lock.json
-         echo "----------NPM install------------"
-         npm install
-         echo "----------Download Latest Snyk CLI-----------"
-            curl -Lo ./snyk "https://github.com/snyk/snyk/releases/download/v1.1060.0/snyk-linux"
-            chmod +x snyk
-            ls -lrt
-            echo "----------Authenticating Snyk-----------"
-            ./snyk auth ${{ secrets.SNYK_TOKEN }}
-            echo "----------Snyk Scanning-----------"
-            ./snyk test --all-projects -d
+          rm -rf node_modules
+          rm -f package-lock.json
+          npm install
+          echo "Downloading and authenticating Snyk CLI..."
+          curl -Lo ./snyk "https://github.com/snyk/snyk/releases/download/v1.1100.0/snyk-linux"
+          chmod +x snyk
+          ./snyk auth ${{ secrets.SNYK_TOKEN }}
+          echo "Running Snyk test and monitor..."
+          ./snyk test --all-projects --color || true
+          ./snyk monitor --all-projects || true
   TruffleHog_scanning:
     name: TruffleHog Bot scan
     runs-on: ubuntu-latest
