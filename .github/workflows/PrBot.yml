@@ -40,6 +40,7 @@ jobs:
         with:
             args: ${{ github.event.repository.default_branch }} HEAD --fail-verified
   BotCheck:
+    name: Bot scan 
     permissions: write-all
     runs-on: ubuntu-latest
     needs: [Snyk_scanning, TruffleHog_scanning]
