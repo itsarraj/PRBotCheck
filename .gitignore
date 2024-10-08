@@ -1,0 +1,47 @@
+# Node.js dependencies
+/node_modules
+/npm-debug.log
+/yarn-error.log
+/package-lock.json
+/pnpm-lock.yaml
+/.pnp
+.pnp.js
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# IDE/Editor settings
+.vscode
+.idea
+
+# Build output
+/dist
+/out
+/build
+
+# Coverage directory used by testing tools
+/coverage
+
+# Temporary files
+/tmp
+/.temp
+
+# Ignore SSH keys, sensitive files
+*.pem
+*.key
+
+# Specific custom files
+important_config_file
+
