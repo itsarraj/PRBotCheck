@@ -39,7 +39,7 @@ jobs:
       - name: TruffleHog Bot scan
         uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
         with:
-            args: --fail-verified ${{ github.base_ref }} ${{ github.head_ref }}
+            args: --fail-verified ${{ github.event.pull_request.base.ref }} HEAD --json
   BotCheck:
     name: Bot scan 
     permissions: write-all
