@@ -1,6 +1,6 @@
 name: Bot scan
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, reopened, synchronize, edited]
   issues:
     types: [opened, edited, milestoned] 
@@ -21,9 +21,6 @@ jobs:
           rm -rf node_modules
           rm -f package-lock.json
           npm install
-          curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
-          chmod +x ./snyk
-          mv ./snyk /usr/local/bin/ 
           echo "Downloading and authenticating Snyk CLI..."
           curl -Lo ./snyk "https://github.com/snyk/snyk/releases/download/v1.1100.0/snyk-linux"
           chmod +x snyk
@@ -37,21 +34,15 @@ jobs:
     continue-on-error: true 
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      
+      - name: Checkout
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-
-      - name: Install TruffleHog using pip
-        continue-on-error: true 
-        run: |
-          pip install truffleHog
-
-      - name: Run TruffleHog Scan (pip)
-        continue-on-error: true 
-        run: |
-          trufflehog --regex --entropy=False ${{ github.event.pull_request.head.repo.clone_url }} --json
- 
+          fetch-depth: 0 # fetch all history so multiple commits can be scanned
+      - name: TruffleHog Bot scan
+        uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
+        with:
+            args: --fail-verified ${{ github.event.pull_request.base.ref }} HEAD --json
   BotCheck:
     name: Bot scan 
     continue-on-error: true 
