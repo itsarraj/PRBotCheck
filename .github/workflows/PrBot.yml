@@ -94,9 +94,4 @@ jobs:
           echo "]" >> combined_scan_results.json
           echo "Scan results combined into combined_scan_results.json"
 
-      - name: Upload Scan Results
-        uses: actions/upload-artifact@v2
-        with:
-          name: combined-scan-results
-          path: combined_scan_results.json
-
+      
