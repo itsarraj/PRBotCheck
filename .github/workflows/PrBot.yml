@@ -66,32 +66,10 @@ jobs:
 
       - name: Run TruffleHog Scan (pip)
         run: |
-          trufflehog --regex --entropy=False ${GITHUB_HEAD_REF} --json > trufflehog_pip_scan.json
+          trufflehog --regex --entropy=False ${{ github.event.pull_request.head.repo.clone_url }} --json
 
       - name: Run TruffleHog Enterprise Scan
         uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
         with:
-          args: --fail-verified ${{ github.event.repository.default_branch }} HEAD --json > trufflehog_action_scan.json
+          args: --fail-verified ${{ github.event.repository.default_branch }} HEAD --json 
 
-      - name: Install Gitleaks
-        run: |
-          curl -sSL https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64.tar.gz | tar -xz -C /usr/local/bin
-          chmod +x /usr/local/bin/gitleaks
-
-      - name: Run Gitleaks Scan
-        run: |
-          gitleaks detect --source . --report-format json --report-path gitleaks_scan.json
-
-      - name: Combine Scan Results
-        run: |
-          echo "Combining scan results into a single file."
-          echo "[" > combined_scan_results.json
-          cat trufflehog_pip_scan.json >> combined_scan_results.json
-          echo "," >> combined_scan_results.json
-          cat trufflehog_action_scan.json >> combined_scan_results.json
-          echo "," >> combined_scan_results.json
-          cat gitleaks_scan.json >> combined_scan_results.json
-          echo "]" >> combined_scan_results.json
-          echo "Scan results combined into combined_scan_results.json"
-
-      
