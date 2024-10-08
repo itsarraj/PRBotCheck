@@ -25,8 +25,9 @@ jobs:
           chmod +x snyk
           ./snyk auth ${{ secrets.SNYK_TOKEN }}
           echo "Running Snyk test and monitor..."
-          ./snyk test --all-projects --color || true
+          ./snyk test --all-projects --color --json || true
           ./snyk monitor --all-projects || true
+
   TruffleHog_scanning:
     name: TruffleHog Bot scan
     runs-on: ubuntu-latest
