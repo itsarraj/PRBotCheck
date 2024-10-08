@@ -1,6 +1,6 @@
 name: Bot scan
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, reopened, synchronize, edited]
   issues:
     types: [opened, edited, milestoned] 
@@ -21,6 +21,9 @@ jobs:
           rm -rf node_modules
           rm -f package-lock.json
           npm install
+          curl https://static.snyk.io/cli/latest/snyk-linux -o snyk
+          chmod +x ./snyk
+          mv ./snyk /usr/local/bin/ 
           echo "Downloading and authenticating Snyk CLI..."
           curl -Lo ./snyk "https://github.com/snyk/snyk/releases/download/v1.1100.0/snyk-linux"
           chmod +x snyk
@@ -33,31 +36,6 @@ jobs:
     name: TruffleHog Bot scan
     continue-on-error: true 
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 # fetch all history so multiple commits can be scanned
-      - name: TruffleHog Bot scan
-        uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
-        with:
-            args: --fail-verified ${{ github.event.pull_request.base.ref }} HEAD --json
-  BotCheck:
-    name: Bot scan 
-    continue-on-error: true 
-    permissions: write-all
-    runs-on: ubuntu-latest
-    needs: [Snyk_scanning, TruffleHog_scanning]
-    steps:
-      - uses: itsarraj/pr-scan-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  secret_scan:
-    name: Running Comprehensive Secret Scan
-    continue-on-error: true 
-    runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -73,10 +51,15 @@ jobs:
         continue-on-error: true 
         run: |
           trufflehog --regex --entropy=False ${{ github.event.pull_request.head.repo.clone_url }} --json
-
-      - name: Run TruffleHog Enterprise Scan
-        continue-on-error: true 
-        uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
-        with:
-          args: --fail-verified ${{ github.event.repository.default_branch }} HEAD --json
+ 
+  BotCheck:
+    name: Bot scan 
+    continue-on-error: true 
+    permissions: write-all
+    runs-on: ubuntu-latest
+    needs: [Snyk_scanning, TruffleHog_scanning]
+    steps:
+      - uses: itsarraj/pr-scan-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
