@@ -1,6 +1,6 @@
 name: Bot scan
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, reopened, synchronize, edited]
   issues:
     types: [opened, edited, milestoned] 
