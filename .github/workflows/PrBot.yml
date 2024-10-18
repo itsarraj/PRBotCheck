@@ -45,10 +45,11 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}  
           fetch-depth: 0
       - name: TruffleHog Bot scan A
-        uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
+        uses: trufflesecurity/trufflehog@main
         with:
-            args: ${{ github.event.pull_request.head.sha }} HEAD --fail-verified
-
+          base: ""
+          head: ${{ github.event.pull_request.head.sha }}
+          extra_args: --only-verified
   BotCheck:
     continue-on-error: true 
     permissions: write-all
