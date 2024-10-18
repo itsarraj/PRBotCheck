@@ -19,7 +19,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}  
 
-      - name: Snyk Bot scan A
+      - name: Snyk Bot scan 
         run: |
           rm -rf node_modules
           rm -f package-lock.json
@@ -28,7 +28,7 @@ jobs:
           curl -Lo ./snyk "https://github.com/snyk/snyk/releases/download/v1.1100.0/snyk-linux"
           chmod +x snyk
           ./snyk auth ${{ secrets.SNYK_TOKEN }}
-      - name: Snyk Bot scan B
+      - name: Snyk Bot scan 
         run: |
           echo "Running Snyk test and monitor..."
           ./snyk test --all-projects --color --json|| true
@@ -44,7 +44,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}  
           fetch-depth: 0
-      - name: TruffleHog Bot scan A
+      - name: TruffleHog Bot scan 
         uses: trufflesecurity/trufflehog@main
         with:
           base: ""
