@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   Snyk_scanning:
-    name: Snyk Bot scan Main
+    name: Snyk Bot scan
     continue-on-error: true 
     runs-on: ubuntu-latest
     steps:
@@ -19,7 +19,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}  
 
-      - name: Snyk Bot scan Main2
+      - name: Snyk Bot scan 
         run: |
           rm -rf node_modules
           rm -f package-lock.json
@@ -34,7 +34,7 @@ jobs:
           ./snyk test --all-projects --color --json || true
 
   TruffleHog_scanning:
-    name: TruffleHog Bot scan Main
+    name: TruffleHog Bot scan
     continue-on-error: true 
     runs-on: ubuntu-latest
     steps:
