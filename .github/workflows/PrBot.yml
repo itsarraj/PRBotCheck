@@ -43,16 +43,12 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0 # fetch all history so multiple commits can be scanned
-      - name: Install TruffleHog
-        run: |
-          echo "Installing TruffleHog..."
-          curl -Lo trufflehog "https://github.com/trufflesecurity/trufflehog/releases/latest/download/trufflehog-linux"
-          chmod +x trufflehog
-          sudo mv trufflehog /usr/local/bin/
 
       - name: TruffleHog Bot scan
-        run: |
-          trufflehog git file://. --since-commit HEAD --only-verified --fail --json
+        uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
+        with:
+            args: --fail-verified ${{ github.event.pull_request.head.ref }} HEAD --json
+
 
   BotCheck:
     continue-on-error: true 
