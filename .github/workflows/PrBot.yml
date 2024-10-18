@@ -14,8 +14,11 @@ jobs:
     continue-on-error: true 
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout PR code (source branch)
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}  
+
       - name: Snyk Bot scan
         run: |
           rm -rf node_modules
@@ -44,13 +47,16 @@ jobs:
         run: |
           echo "Scanning from base branch: ${{ github.event.pull_request.base.ref }}"
           echo "Scanning to HEAD: ${{ github.ref }}"
-
+    
       - name: TruffleHog Bot scan
+        run: |
+          docker run -it --rm trufflesecurity/trufflehog:latest github ${{ github.event.pull_request.head.ref }}
+
+      - name: TruffleHog Bot scan old
         uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
         with:
-            args: --fail-verified ${{ github.event.pull_request.base.ref }} HEAD --json
+            args: --fail-verified ${{ github.event.pull_request.head.ref }} HEAD --json
   BotCheck:
-    name: Bot scan 
     continue-on-error: true 
     permissions: write-all
     runs-on: ubuntu-latest
