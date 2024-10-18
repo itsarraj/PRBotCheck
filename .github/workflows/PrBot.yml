@@ -31,7 +31,7 @@ jobs:
       - name: Snyk Bot scan B
         run: |
           echo "Running Snyk test and monitor..."
-          ./snyk test --all-projects --color || true
+          ./snyk test --all-projects --color --json|| true
           ./snyk monitor --all-projects || true
 
   TruffleHog_scanning:
@@ -44,15 +44,10 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}  
           fetch-depth: 0
-      - name: Install TruffleHog
-        run: |
-          echo "Installing TruffleHog..."
-          pip install truffleHog
-
-      - name: Run TruffleHog scan C
-        run: |
-          echo "Running TruffleHog scan..."
-          trufflehog --regex --json --entropy=False ${{ github.event.pull_request.head.sha}}
+      - name: TruffleHog Bot scan A
+        uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
+        with:
+            args: ${{ github.event.pull_request.head.sha }} HEAD --fail-verified
 
   BotCheck:
     continue-on-error: true 
