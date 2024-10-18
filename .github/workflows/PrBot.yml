@@ -19,7 +19,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}  
 
-      - name: Snyk Bot scan Main
+      - name: Snyk Bot scan
         run: |
           rm -rf node_modules
           rm -f package-lock.json
@@ -29,7 +29,6 @@ jobs:
           chmod +x snyk
           ./snyk auth ${{ secrets.SNYK_TOKEN }}
           echo "Running Snyk test "
-      - name: Snyk Bot scan
         run: |
           ./snyk test --all-projects --color --json || true
 
