@@ -45,9 +45,9 @@ jobs:
           fetch-depth: 0 # fetch all history so multiple commits can be scanned
 
       - name: TruffleHog Bot scan
-        uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
+        uses: trufflesecurity/trufflehog@main
         with:
-            args: --fail-verified ${{ github.event.pull_request.head.ref }} HEAD --json
+            extra_args: --only-verified
 
 
   BotCheck:
