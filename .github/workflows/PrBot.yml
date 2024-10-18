@@ -43,7 +43,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0 # fetch all history so multiple commits can be scanned
-    
       - name: Install TruffleHog
         run: |
           echo "Installing TruffleHog..."
@@ -53,8 +52,9 @@ jobs:
 
       - name: TruffleHog Bot scan
         run: |
-          trufflehog git file://. --since-commit HEAD --only-verified --fail --json  BotCheck:
+          trufflehog git file://. --since-commit HEAD --only-verified --fail --json
 
+  BotCheck:
     continue-on-error: true 
     permissions: write-all
     runs-on: ubuntu-latest
