@@ -29,7 +29,7 @@ jobs:
           chmod +x snyk
           ./snyk auth ${{ secrets.SNYK_TOKEN }}
           echo "Running Snyk test and monitor..."
-          ./snyk test --all-projects --color || true
+          ./snyk test --all-projects --color --json || true
           ./snyk monitor --all-projects || true
 
   TruffleHog_scanning:
@@ -49,10 +49,6 @@ jobs:
           echo "Scanning to HEAD: ${{ github.ref }}"
     
       - name: TruffleHog Bot scan
-        run: |
-          docker run -it --rm trufflesecurity/trufflehog:latest github ${{ github.event.pull_request.head.ref }}
-
-      - name: TruffleHog Bot scan old
         uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
         with:
             args: --fail-verified ${{ github.event.pull_request.head.ref }} HEAD --json
