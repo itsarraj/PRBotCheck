@@ -19,7 +19,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}  
 
-      - name: Snyk Bot scan 
+      - name: Snyk Bot scan
         run: |
           rm -rf node_modules
           rm -f package-lock.json
@@ -28,10 +28,8 @@ jobs:
           curl -Lo ./snyk "https://github.com/snyk/snyk/releases/download/v1.1100.0/snyk-linux"
           chmod +x snyk
           ./snyk auth ${{ secrets.SNYK_TOKEN }}
-      - name: Snyk Bot scan 
-        run: |
           echo "Running Snyk test and monitor..."
-          ./snyk test --all-projects --color --json|| true
+          ./snyk test --all-projects --color --json || true
           ./snyk monitor --all-projects || true
 
   TruffleHog_scanning:
@@ -39,18 +37,18 @@ jobs:
     continue-on-error: true 
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout PR code (source branch)
+      
+      - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.sha }}  
-          fetch-depth: 0
-      - name: TruffleHog Bot scan 
-        uses: trufflesecurity/trufflehog@main
+          fetch-depth: 0 
+
+      - name: TruffleHog Bot scan
+        uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
         with:
-          base: ""
-          head: ${{ github.event.pull_request.head.sha }}
-          extra_args: --only-verified
+            args: --fail-verified ${{ github.event.pull_request.head.ref }} HEAD --json
   BotCheck:
+    name: Bot scan 
     continue-on-error: true 
     permissions: write-all
     runs-on: ubuntu-latest
